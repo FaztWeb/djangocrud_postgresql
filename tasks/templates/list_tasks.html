@@ -1,0 +1,71 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Django CRUD</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body class="bg-dark">
+    <div class="col-md-4 offset-md-4">
+      {{error}}
+
+      <!-- Create Form -->
+      <form
+        action="{% url 'create_task' %}"
+        method="POST"
+        class="card card-body mb-2"
+      >
+        {% csrf_token %}
+
+        <label for="title">Write a title:</label>
+        <input
+          type="text"
+          name="title"
+          placeholder="Write a title"
+          class="form-control mb-2"
+          autofocus
+        />
+
+        <label for="description">Write a description:</label>
+        <textarea
+          name="description"
+          id="description"
+          rows="2"
+          class="form-control mb-2"
+          placeholder="I have to do..."
+        ></textarea>
+        <button class="btn btn-primary">save</button>
+      </form>
+
+      <!-- List Tasks -->
+      {% for task in tasks %}
+      <div class="list-group">
+        <div
+          class="card card-body bg-secondary text-light d-flex flex-row justify-content-between mb-2"
+        >
+          <div>
+            <h3 class="h6">{{task.title}}</h3>
+            <p>{{task.description}}</p>
+          </div>
+          <form action="{% url 'delete_task' task.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+      {% empty %}
+      <h1 class="text-light">No tasks yet</h1>
+      {% endfor %}
+    </div>
+  </body>
+</html>
